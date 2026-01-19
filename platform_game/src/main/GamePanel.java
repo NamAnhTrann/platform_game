@@ -1,37 +1,57 @@
 package main;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import java.io.InputStream;
+
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 //make stuff appear on GameWindow
 public class GamePanel extends JPanel {
     private float xDelta = 100;
     private float yDelta = 100;
-
-    // private float xDir = 1f;
-    // private float yDir =1f;
-
+    private BufferedImage img, subImg;
     private MouseInputs mouseInputs;
-
-    // private Random random;
-
     private Color color = new Color(150,20,90);
 
     public GamePanel(){
-        // random = new Random();
         mouseInputs = new MouseInputs(this); //this here basically means when something happens, call methods on this GamePanel instance
-        setFocusable(true);
+        importImg();
         addKeyListener(new KeyboardInputs(this));
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
+        setPanelSize();
     }
 
-    //
+    //import images
+private void importImg() {
+    InputStream is =
+        getClass().getResourceAsStream("/res/player_sprites.png");
+        System.out.println(is);
+
+    try {
+        img = ImageIO.read(is);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+
+    private void setPanelSize() {
+        Dimension size = new Dimension(1280, 800);
+        setMinimumSize(size);
+        setMaximumSize(size);
+        setPreferredSize(size);
+    }
     public void changeXDelta (int value) {
         this.xDelta += value;
     }
@@ -49,30 +69,9 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g){
         //calling the super class in Jpanel
         super.paintComponent(g);
-        // updateRectangle();
-        g.setColor(color);
-        g.fillRect((int)xDelta, (int)yDelta, 200, 50);
+        subImg = img.getSubimage(1*64, 8*40, 64, 40);
+        g.drawImage(subImg, (int)xDelta, (int)yDelta, 128,80, null);
     }
 
-    // private void updateRectangle(){
-   
-    //     if(xDelta > 400 || xDelta < 0){
-    //         xDir *= -1;
-    //         color = getRandomColor();
-    //     }
-   
-    //     if(yDelta > 400 || yDelta <0){
-    //         yDir *= -1;
-    //         color = getRandomColor();
-    //     }
-
-    // }
-
-    // private Color getRandomColor() {
-    //     int r = random.nextInt(255);
-    //     int g = random.nextInt(50);
-    //     int b = random.nextInt(100);
-
-    //     return new Color(r,g,b);
-    // }
+    
 }
