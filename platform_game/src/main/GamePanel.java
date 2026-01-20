@@ -1,20 +1,17 @@
 package main;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import java.io.InputStream;
+
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import static utils.Constants.PlayerConstants.*;
-import static utils.Constants.Direction.*;
+
+
 
 //make stuff appear on GameWindow
 public class GamePanel extends JPanel {

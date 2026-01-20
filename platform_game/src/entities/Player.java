@@ -8,7 +8,7 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import static utils.Constants.PlayerConstants.*;
-import static utils.Constants.Direction.*;
+
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
