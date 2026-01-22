@@ -3,6 +3,7 @@ package main;
 import java.awt.Graphics;
 
 import entities.Player;
+import levels.LevelManager;
 
 //Everything relevant to game class
 public class Game implements Runnable {
@@ -14,6 +15,16 @@ public class Game implements Runnable {
     private final int UPS_SET = 200;
 
     private Player player;
+    private LevelManager levelManager;
+
+    //Tiles stuff
+    public final static int TITLES_DEFAULT_SIZE = 32;
+    public final static float SCALE = 1.5f;
+    public final static int TILES_IN_WIDTH = 26;
+    public final static int TILES_IN_HEIGHT = 14;
+    public final static int TILES_SIZE = (int) (TITLES_DEFAULT_SIZE * SCALE);
+    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     // constructor - head method of the class, use to make object
     public Game() {
@@ -29,7 +40,8 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        player = new Player(200, 200);
+        player = new Player(250, 160);
+        levelManager = new LevelManager(this);
     }
 
     private void startGameLoop() {
@@ -84,11 +96,14 @@ public class Game implements Runnable {
     // in game panel
     private void update() {
         player.update();
+        levelManager.update();
 
     }
 
     public void render(Graphics g) {
+        levelManager.draw(g);
         player.render(g);
+       
     }
 
     public Player getPlayer() {

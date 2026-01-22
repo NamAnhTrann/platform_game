@@ -25,21 +25,21 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1) {
-            gamePanel.getGame().getPlayer().setAttacking(true);
-            
-        }
+        
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
+        if(e.getButton() == MouseEvent.BUTTON1) {
+            gamePanel.getGame().getPlayer().setAttacking(true);
+            
+        }
 
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
+   
 
     }
 
