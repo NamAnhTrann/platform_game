@@ -35,12 +35,15 @@ public class LevelManager {
             for (int i = 0; i < Game.TILES_IN_WIDTH; i++) {
                 int index = levelOne.getSpriteIndex(i, j);
                 g.drawImage(levelSprite[index], i * TILES_SIZE, j * TILES_SIZE, TILES_SIZE, TILES_SIZE, null);
-
             }
         }
     }
 
     public void update() {
 
+    }
+
+    public Level getCurrentLevel(){
+        return levelOne;
     }
 }

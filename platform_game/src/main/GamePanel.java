@@ -21,6 +21,7 @@ public class GamePanel extends JPanel {
         mouseInputs = new MouseInputs(this); // this here basically means when something happens, call methods on this
                                              // GamePanel instance
         this.game = game;
+        
         addKeyListener(new KeyboardInputs(this));
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);

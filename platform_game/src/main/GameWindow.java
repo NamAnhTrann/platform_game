@@ -13,6 +13,7 @@ public class GameWindow extends JFrame {
         setResizable(false);
         pack(); //tell Jframe look at that component and make the window big enough to fit panel (jpanel)
         setVisible(true); //make window appear
+        
         addWindowFocusListener(new WindowFocusListener() {
             @Override
             public void windowGainedFocus(java.awt.event.WindowEvent e) {

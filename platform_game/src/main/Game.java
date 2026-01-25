@@ -5,112 +5,107 @@ import java.awt.Graphics;
 import entities.Player;
 import levels.LevelManager;
 
-//Everything relevant to game class
 public class Game implements Runnable {
-    private GameWindow gameWindow;
-    private GamePanel gamePanel;
-    private Thread gameThread;
-    private final int FPS_SET = 120;
 
-    private final int UPS_SET = 200;
+	private GameWindow gameWindow;
+	private GamePanel gamePanel;
+	private Thread gameThread;
+	private final int FPS_SET = 120;
+	private final int UPS_SET = 200;
+	private Player player;
+	private LevelManager levelManager;
 
-    private Player player;
-    private LevelManager levelManager;
+	public final static int TILES_DEFAULT_SIZE = 32;
+	public final static float SCALE = 2f;
+	public final static int TILES_IN_WIDTH = 26;
+	public final static int TILES_IN_HEIGHT = 14;
+	public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+	public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+	public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
-    //Tiles stuff
-    public final static int TITLES_DEFAULT_SIZE = 32;
-    public final static float SCALE = 1.5f;
-    public final static int TILES_IN_WIDTH = 26;
-    public final static int TILES_IN_HEIGHT = 14;
-    public final static int TILES_SIZE = (int) (TITLES_DEFAULT_SIZE * SCALE);
-    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
-    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+	public Game() {
+		initClasses();
 
-    // constructor - head method of the class, use to make object
-    public Game() {
-        initClasses();
+		gamePanel = new GamePanel(this);
+		gameWindow = new GameWindow(gamePanel);
+		gamePanel.requestFocus();
 
-        gamePanel = new GamePanel(this); // create game panel object
-        // then put that object inside game Window
-        gameWindow = new GameWindow(gamePanel);
-        // request that this component get the input focus
-        gamePanel.requestFocusInWindow();
-        startGameLoop();
+		startGameLoop();
+	}
 
-    }
+	private void initClasses() {
+		levelManager = new LevelManager(this);
+		player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
-    private void initClasses() {
-        player = new Player(250, 160);
-        levelManager = new LevelManager(this);
-    }
+	}
 
-    private void startGameLoop() {
-        gameThread = new Thread(this);
-        gameThread.start();
-    }
+	private void startGameLoop() {
+		gameThread = new Thread(this);
+		gameThread.start();
+	}
 
-    @Override
-    public void run() {
-        final double timePerFrame = 1_000_000_000.0 / FPS_SET;
-        final double timePerUpdate = 1_000_000_000.0 / UPS_SET;
+	public void update() {
+		levelManager.update();
+		player.update();
+	}
 
-        long previousTime = System.nanoTime();
+	public void render(Graphics g) {
+		levelManager.draw(g);
+		player.render(g);
+	}
 
-        int frames = 0;
-        int updates = 0;
-        long lastCheck = System.currentTimeMillis();
+	@Override
+	public void run() {
 
-        double deltaU = 0;
-        double deltaF = 0;
+		double timePerFrame = 1000000000.0 / FPS_SET;
+		double timePerUpdate = 1000000000.0 / UPS_SET;
 
-        while (true) {
-            long currentTime = System.nanoTime();
-            long elapsed = currentTime - previousTime;
-            previousTime = currentTime;
+		long previousTime = System.nanoTime();
 
-            deltaU += elapsed / timePerUpdate;
-            deltaF += elapsed / timePerFrame;
+		int frames = 0;
+		int updates = 0;
+		long lastCheck = System.currentTimeMillis();
 
-            while (deltaU >= 1) {
-                update();
-                updates++;
-                deltaU--;
-            }
+		double deltaU = 0;
+		double deltaF = 0;
 
-            if (deltaF >= 1) {
-                gamePanel.repaint();
-                frames++;
-                deltaF--;
-            }
+		while (true) {
+			long currentTime = System.nanoTime();
 
-            if (System.currentTimeMillis() - lastCheck >= 1000) {
-                lastCheck = System.currentTimeMillis();
-                System.out.println("FPS: " + frames + " | UPS: " + updates);
-                frames = 0;
-                updates = 0;
-            }
-        }
-    }
+			deltaU += (currentTime - previousTime) / timePerUpdate;
+			deltaF += (currentTime - previousTime) / timePerFrame;
+			previousTime = currentTime;
 
-    // this will control when update happens, and will call the updateGame() method
-    // in game panel
-    private void update() {
-        player.update();
-        levelManager.update();
+			if (deltaU >= 1) {
+				update();
+				updates++;
+				deltaU--;
+			}
 
-    }
+			if (deltaF >= 1) {
+				gamePanel.repaint();
+				frames++;
+				deltaF--;
+			}
 
-    public void render(Graphics g) {
-        levelManager.draw(g);
-        player.render(g);
-       
-    }
+			if (System.currentTimeMillis() - lastCheck >= 1000) {
+				lastCheck = System.currentTimeMillis();
+				System.out.println("FPS: " + frames + " | UPS: " + updates);
+				frames = 0;
+				updates = 0;
 
-    public Player getPlayer() {
-        return player;
-    }
+			}
+		}
 
-    public void windowFocusLost() {
-        player.resetDirBooleans();
-    }
+	}
+
+	public void windowFocusLost() {
+		player.resetDirBooleans();
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
 }
