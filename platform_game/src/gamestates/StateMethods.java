@@ -11,7 +11,7 @@ public interface StateMethods {
 
     public void mouseClicked(MouseEvent e);
 
-    public void mouseMoveed(MouseEvent e);
+    public void mouseMoved(MouseEvent e);
 
     public void mousePressed(MouseEvent e);
 
