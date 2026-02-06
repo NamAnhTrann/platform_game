@@ -2,7 +2,6 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
 //abstract class means you cannot create an object of this class
