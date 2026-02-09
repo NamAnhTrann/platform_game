@@ -7,10 +7,14 @@ import java.awt.event.MouseEvent;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import ui.PausedOverlay;
 
 public class Playing extends State implements StateMethods {
     private Player player;
     private LevelManager levelManager;
+
+    private boolean paused = false;
+    private PausedOverlay pausedOverlay;
 
     public Playing(Game game) {
         super(game);
@@ -21,40 +25,62 @@ public class Playing extends State implements StateMethods {
         levelManager = new LevelManager(game);
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
-
+        pausedOverlay = new PausedOverlay(this);
     }
 
     @Override
     public void update() {
-        levelManager.update();
-        player.update();
+        if (!paused) {
+            levelManager.update();
+            player.update();
+        } else {
+            pausedOverlay.update();
+
+        }
+
     }
 
     @Override
     public void draw(Graphics g) {
-       levelManager.draw(g);
-       player.render(g);
+        levelManager.draw(g);
+        player.render(g);
+        if (paused) {
+            pausedOverlay.draw(g);
+
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            player.setAttacking(true);
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-       
+        if (paused) {
+            pausedOverlay.mouseMoved(e);
+        }
+    }
+
+    public void mouseDragged(MouseEvent e){
+        if(paused){
+            pausedOverlay.mouseDragged(e);
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-       
+        if (paused) {
+            pausedOverlay.mousePressed(e);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            player.setAttacking(true);
+        if (paused) {
+            pausedOverlay.mouseReleased(e);
         }
     }
 
@@ -71,8 +97,9 @@ public class Playing extends State implements StateMethods {
             case KeyEvent.VK_SPACE:
                 player.setJump(true);
                 break;
-            case KeyEvent.VK_BACK_SPACE:
-                Gamestate.state=Gamestate.MENU;
+            case KeyEvent.VK_ESCAPE:
+                paused = !paused;
+                break;
         }
     }
 
@@ -90,6 +117,11 @@ public class Playing extends State implements StateMethods {
                 player.setJump(false);
                 break;
         }
+
+    }
+
+    public void unpauseGame() {
+        paused = false;
 
     }
 
