@@ -9,9 +9,9 @@ public class GameWindow extends JFrame {
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //terminate window on close
         add(gamePanel); //add gamePanel to gameWindow
-        setLocationRelativeTo(null); //make start in the center
         setResizable(false);
-        pack(); //tell Jframe look at that component and make the window big enough to fit panel (jpanel)
+        pack(); //tell Jframe look at that component
+        setLocationRelativeTo(null);
         setVisible(true); //make window appear
         
         addWindowFocusListener(new WindowFocusListener() {
