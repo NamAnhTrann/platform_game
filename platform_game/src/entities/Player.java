@@ -1,9 +1,11 @@
 package entities;
 
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
+import gamestates.Playing;
 import main.Game;
 import utils.LoadSave;
 
@@ -28,6 +30,32 @@ public class Player extends Entity {
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
     private boolean inAir = false;
 
+    private BufferedImage statusBarImg;
+
+    // status bars
+    private int statusBarWidth = (int) (192 * Game.SCALE);
+    private int statusBarHeight = (int) (58 * Game.SCALE);
+    private int statusBarX = (int) (10 * Game.SCALE);
+    private int statusBarY = (int) (10 * Game.SCALE);
+
+    // health bars
+    private int healthBarWidth = (int) (150 * Game.SCALE);
+    private int healthBarHeight = (int) (4 * Game.SCALE);
+    private int healthBarXStart = (int) (34 * Game.SCALE);
+    private int healthBarYStart = (int) (14 * Game.SCALE);
+
+    private int maxHealth = 10;
+    private int currentHealth = maxHealth;
+    private int healthWidth = healthBarWidth;
+
+    private Rectangle2D.Float attackBox;
+
+    private int flipX = 0;
+    private int flipW = 1;
+
+    private boolean attackChecked;
+    private Playing playing;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimation();
@@ -50,6 +78,12 @@ public class Player extends Entity {
                 null);
 
         drawHitbox(g, lvlOffset);
+
+        drawUI(g);
+    }
+
+    private void drawUI(Graphics g) {
+        g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
     }
 
     private void setAnimation() {
@@ -180,6 +214,7 @@ public class Player extends Entity {
                 animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
             }
         }
+        statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
 
     }
 
